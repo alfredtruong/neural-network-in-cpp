@@ -6,11 +6,5 @@
   - [Neural Network Implementation in C++ From Scratch](https://www.geeksforgeeks.org/ml-neural-network-implementation-in-c-from-scratch/)
 
 ### VISUALIZATIONS
-  - [TensorFlow playgroud](https://playground.tensorflow.org/)(https://github.com/tensorflow/playground/tree/master/src)
+  - [TensorFlow playground](https://playground.tensorflow.org/)(https://github.com/tensorflow/playground/tree/master/src)
   - [ConvNetJS](https://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html)
-
-### KEYWORDS
-  - Activation Units = ReLU / Tanh / Sigmoid / Linear
-  - Transformer
-  - Convolutional Neural Net
-  - Auto-Encoder
