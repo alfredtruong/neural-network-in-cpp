@@ -1,15 +1,37 @@
 # depslib dependency file v1.0
-1675762881 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.cpp
+1675768973 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.cpp
+	"utils.hpp"
 	"NeuralNetwork.hpp"
-	<cmath>
-	<random>
-	<iostream>
 
-1675766195 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.hpp
+1675768956 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.hpp
+	"Layer.hpp"
 
-1675766253 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\main.cpp
+1675768871 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\main.cpp
 	"NeuralNetwork.hpp"
 	<iostream>
 	<array>
 	<random>
+
+1675769054 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\node.hpp
+	<iostream>
+	<string>
+	<vector>
+	<cmath>
+	<random>
+
+1675768973 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\layer.hpp
+	"Node.hpp"
+
+1675767734 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.hpp
+	<vector>
+	<iostream>
+
+1675767731 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.cpp
+
+1675769013 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\node.cpp
+	"Node.hpp"
+
+1675769071 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\layer.cpp
+	"Layer.hpp"
+	"utils.hpp"
 
