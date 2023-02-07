@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1675762881 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.cpp
+	"NeuralNetwork.hpp"
+	<cmath>
+	<random>
+	<iostream>
+
+1675766195 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.hpp
+
+1675766253 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\main.cpp
+	"NeuralNetwork.hpp"
+	<iostream>
+	<array>
+	<random>
+
