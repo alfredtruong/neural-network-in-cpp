@@ -2,39 +2,39 @@
 #define LAYER_H
 
 #include "Node.hpp"
+#include <vector>
+#include <string>
 
 using namespace std;
 
 class Layer
 {
 private:
-  string m_layerName;
-  bool m_isOutputLayer;
-  int m_nInputs;
-  int m_nNodes;
-  vector<Node> m_nodes;
-  vector<double> m_outputs;
-  vector<double> m_errors;
+  string m_layerName;          // layer label
+  int m_nInputs;               // counter of inputs
+  int m_nNodes;                // counter of nodes
+  vector<Node> m_nodes;        // look into "operator[] overloading for vector"
+  vector<double> m_outputs;    // intermediate container for node outputs
 
 public:
-  Layer(string layer_name,int n_inputs,int n_nodes,bool is_output_layer); // constructor
-  ~Layer();                        // destructor
+  Layer(string layer_name,int n_inputs,int n_nodes); // constructor
+  ~Layer();                                          // destructor
 
+  void evaluate_inputs(const vector<double>& inputs);
 
-  void evaluate(vector<double>& inputs);
-  /*
-  void back_propagation_errors(vector<double>& errors); // compute errors of all nodes in layer
-  void update_weights();                                // update weights of all nodes in layer
-  */
+  // update node deltas
+  void update_output_layer_deltas(const vector<double>& expected_outputs);
+  void update_hidden_layer_deltas(Layer& next_layer);
+
+  // update node weights
+  void update_weights(const vector<double>& inputs,double learning_rate); // update weights of all nodes in layer
 
   // getters
   string get_layerName(void) { return m_layerName; };
-  bool get_isOutputLayer(void) { return m_isOutputLayer; };
   int get_nInputs(void) { return m_nInputs; };
   int get_nNodes(void) { return m_nNodes; };
   Node get_node(int node_idx) { return m_nodes[node_idx]; }
   vector<double> get_outputs(void) { return m_outputs; };
-  vector<double> get_errors(void) { return m_errors; };
 
   // print
   void print(void);

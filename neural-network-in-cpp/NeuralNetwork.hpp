@@ -1,30 +1,37 @@
 #ifndef NEURALNETWORK_H
 #define NEURALNETWORK_H
 
+#include "Node.hpp"
 #include "Layer.hpp"
+#include <vector>
 
 using namespace std;
 
 class NeuralNetwork
 {
 private:
-  int m_nInputs;
-  int m_nHiddens;
-  int m_nOutputs;
+  int m_nLayers;           // counter of layers
+  int m_nInputs;           // counter of inputs
+  int m_nHiddens;          // counter of hidden nodes
+  int m_nOutputs;          // counter of outputs
   vector<Layer> m_layers;
 
 public:
   // constructor
-  NeuralNetwork(int n_inputs,int n_hiddens,int n_outputs);
-  ~NeuralNetwork();
+  NeuralNetwork(int n_inputs,int n_hiddens,int n_outputs);   // constructor
+  ~NeuralNetwork();                                          // destructor
 
   // methods
-  void forward_propagate_inputs(vector<double>& inputs);
-  void back_propagate_errors(vector<double>& expected_outputs);
-  void update_weights();
+  void add_layer(string name,int n_inputs,int n_nodes);
+  void forward_propagate_inputs(const vector<double>& inputs);
+  void back_propagate_errors(const vector<double>& expected_outputs);
+  void update_weights(const vector<double>& inputs, double learning_rate);
+  void train();
+  void predict();
 
   // print
   void print(void);
+
 };
 
 #endif

@@ -1,4 +1,7 @@
 #include "Node.hpp"
+#include <iostream>
+#include <cmath>
+#include <random>
 
 ////////////////////////////////////////////////////////
 // NODE
@@ -30,12 +33,12 @@ double Node::activation_function(double x) {
   return 1.0 / (1.0 + exp(-x));
 };
 
-// gives gradient at m_output
-double Node::transfer_derivative(void) {
-  return m_output * (1.0 - m_output);
+// gradient of activation function
+double Node::transfer_derivative(double x) {
+  return x * (1.0 - x);
 };
 
-void Node::compute_activation(vector<double>& inputs) {
+void Node::compute_activation(const vector<double>& inputs) {
   m_activation = m_weights[m_nWeights]; // overwriting existing value, start with bias
   for (int i=0;i<m_nWeights;i++)
     m_activation += m_weights[i] * inputs[i]; // add weight x input
@@ -48,7 +51,7 @@ void Node::compute_output(void) {
 }
 
 // forward propagate inputs
-void Node::evaluate(vector<double>& inputs) {
+void Node::evaluate_inputs(const vector<double>& inputs) {
   compute_activation(inputs);
   compute_output();
   //cout << "[" << this << "][" << __func__ << "] " << endl;
@@ -56,20 +59,25 @@ void Node::evaluate(vector<double>& inputs) {
 }
 
 void Node::print(void) {
-  cout << "node [" << this << "]"
-  << ", name = [" << m_nodeName << "]"
-  << ", nWeights = [" << m_nWeights << "]"
-  << endl;
+  cout << "node [" << this << "]";
+  cout << ", name = [" << m_nodeName << "]";
+  cout << ", nWeights = [" << m_nWeights << "]";
+  cout << endl;
 
-  cout << "\tbias = [ " << m_weights[m_nWeights] << " ], ";
+  cout << "\t";
+  cout << "bias = [ " << m_weights[m_nWeights] << " ], ";
   cout << "weights = [ ";
   for (int i=0;i<m_nWeights;i++) cout << m_weights[i] << ", ";
   cout << "]" << endl;
 
-  cout << "\tactivation = [" << m_activation << "], ";
+  cout << "\t";
+  cout << "activation = [" << m_activation << "], ";
   cout << "output = [" << m_output << "], ";
   cout << "delta = [" << m_delta << "]" << endl;
+
+  cout << endl;
 }
+
 /*
 ostream& operator<< (ostream& os, const Node& node) {
   //os << node.get_weights();
