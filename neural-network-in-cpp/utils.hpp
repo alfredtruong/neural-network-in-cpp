@@ -31,6 +31,9 @@ int argmin(vector<T> vec) {
 ////////////////////////////////////////////////////////
 // UTILS
 ////////////////////////////////////////////////////////
-vector<vector<string>> parse_csv(string filename);
+typedef string word;
+typedef vector<word> word_vector;
+typedef vector<word_vector> parsed_file;
+parsed_file parse_csv(string filename,bool verbose = false);
 
 #endif

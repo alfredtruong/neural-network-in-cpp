@@ -1,6 +1,4 @@
 #include "utils.hpp"
-#include "Node.hpp"
-#include "Layer.hpp"
 #include "NeuralNetwork.hpp"
 #include <iostream>
 #include <array>    // for storing weights
@@ -10,91 +8,114 @@ using namespace std;
 
 const int N_ATTRS = 7;
 
-typedef int obs_class;
-typedef array<double,N_ATTRS> obs_attrs;
-typedef pair<obs_class,obs_attrs> y_X;
-typedef vector<y_X> dataset;
-
-typedef vector<vector<string>> parsed_file;
-
 // parse attributes
-dataset prep_dataset(parsed_file& file) {
+classification_dataset prep_dataset(parsed_file& file,bool verbose = false) {
   /*
   columns 0-6 = attributes = float
-  columns 7   = classe     = int
+  columns 7   = class      = int
   */
   // containers to identify columnwise mins and maxs
-  bool initialize_min_max = true; // logic flag re "should initialize min max
-  obs_attrs attr_min; //{numeric_limits<double>::max()};
-  obs_attrs attr_max; //{numeric_limits<double>::min()};
+  bool initialize_min_max = true;             // logic flag re "should initialize min max
+  observation_attributes attr_min(N_ATTRS,0); //{numeric_limits<double>::max()};
+  observation_attributes attr_max(N_ATTRS,0); //{numeric_limits<double>::min()};
 
   // map classes to integer
   map<string,int> class_mapper;
   int class_counter = 0; // counter for unique classes
 
   // container to store massaged data
-  dataset ds;
+  classification_dataset dataset;
 
   // parse + massage data
   for (auto it = file.begin();it!=file.end();it++) {
-    vector<string> row = *it;
-    // convert string to useable data
-    obs_attrs attrs;        // convert attributes from string to doubles
-    obs_class mapped_class; // convert class from string to int
+    word_vector vw = *it;
+    // containers for storing useable data
+    observation_attributes attrs(N_ATTRS,0); // convert attributes from string to doubles
+    observation_class mapped_class;          // convert class from string to int
 
+    // convert string attrs to floats
+    for (int i=0;i<attrs.size();i++)
+      attrs[i] = stod(vw[i]);
 
-    for (int i=0;i<N_ATTRS;i++)
-      attrs[i] = stod(row[i]);
-
-    // identify min/max on each column
+    // identify mins/maxs for each column
     if (initialize_min_max) {
       // ensure attr_min and attr_max populated sensibly
-      for (int i=0;i<N_ATTRS;i++) {
+      for (int i=0;i<attrs.size();i++) {
         attr_min[i] = attrs[i];
         attr_max[i] = attrs[i];
       }
       initialize_min_max = false;
     } else {
-      for (int i=0;i<N_ATTRS;i++) {
+      for (int i=0;i<attrs.size();i++) {
         if (attrs[i]<attr_min[i]) attr_min[i] = attrs[i];
         if (attrs[i]>attr_max[i]) attr_max[i] = attrs[i];
       }
     }
 
-    // map classes to 0,...,N
-    if (class_mapper.find((*it)[N_ATTRS]) == class_mapper.end()) {
+    // map all classes to 0,...,N
+    string class_string = vw[N_ATTRS];
+    if (class_mapper.find(class_string) == class_mapper.end()) {
       // class not present
-      class_mapper[row[N_ATTRS]] == class_counter;
-      class_counter++;
+      class_mapper[class_string] = class_counter; // give new class a name
+      class_counter++;                             // increment for next unique class
+      /*
+      // show class mappings
+      for (auto it = class_mapper.begin();it!=class_mapper.end();it++) cout << it->first << " : "<< it->second << endl;
+      cout << class_counter << endl;
+      */
+
     }
+    mapped_class = class_mapper[class_string];
+    //cout << "raw = " << class_string << " mapped = " << mapped_class << endl;
+
+    classification_observation observation;
+    observation.first = mapped_class;
+    observation.second = attrs;
 
     // save parsed dataset
-    ds.push_back();
+    dataset.push_back(observation);
   }
 
-  // show min/max on each column
-  for (int i=0;i<N_ATTRS;i++) cout << attr_min[i] << " ";
-  cout << endl;
-  for (int i=0;i<N_ATTRS;i++) cout << attr_max[i] << " ";
-  cout << endl;
-
-  // show class mappings
-  for (auto it = class_mapper.begin();it!=class_mapper.end();it++)
-    cout << it->first << it->second << endl;
-
-  // normalize attributes and categorize classes
-  for (auto it = ds.begin();it!=ds.end();it++) {
-    // normalized ds
-    for (int i=0;i<N_ATTRS;i++) {
+  // normalized attrs to [0-1] with min-max normalizer
+  for (auto it = dataset.begin();it!=dataset.end();it++) {
+    observation_attributes& attrs = it->second;
+    for (int i=0;i<attrs.size();i++)
       attrs[i] = (attrs[i] - attr_min[i]) / (attr_max[i] - attr_min[i]);
-    }
-
-    // categorize classes
-    mapped_class = class_mapper[(*it)[N_ATTRS];
   }
 
-  // return normalized ds
-  return X_y(attrs,mapped_class);
+  // show workings
+  if (verbose) {
+    // show min/max on each column
+    cout << "attribute mins / maxs" << endl;
+    cout << "\t";
+    for (int i=0;i<N_ATTRS;i++) cout << attr_min[i] << " ";
+    cout << endl;
+    cout << "\t";
+    for (int i=0;i<N_ATTRS;i++) cout << attr_max[i] << " ";
+    cout << endl;
+    cout << endl;
+
+    // show class mappings
+    cout << "class mappings" << endl;
+    for (auto it = class_mapper.begin();it!=class_mapper.end();it++) cout << "\t" << it->first << " : "<< it->second << endl;
+    cout << endl;
+
+    // display normalized dataset
+    for (auto observation:dataset) {
+      cout << observation.first << " : "
+      << observation.second[0] << " "
+      << observation.second[1] << " "
+      << observation.second[2] << " "
+      << observation.second[3] << " "
+      << observation.second[4] << " "
+      << observation.second[5] << " "
+      << observation.second[6] << " "
+      << endl;
+    }
+  }
+
+  // return normalized dataset
+  return dataset;
 }
 
 int main() {
@@ -114,18 +135,16 @@ int main() {
 
   // train it
 
-  vector<vector<string>> parsed_file = parse_csv("wheat-seeds.txt");
-  dataset ds = parsed_file_to_dataset(parsed_file);
-  for (auto row:ds) {
-    cout << row.second << " : "
-    << row.first[0] << " "
-    << row.first[1] << " "
-    << row.first[2] << " "
-    << row.first[3] << " "
-    << row.first[4] << " "
-    << row.first[5] << " "
-    << row.first[6] << " "
-    << endl;
-  }
+  // get data
+  parsed_file file = parse_csv("wheat-seeds.txt");          // parse
+  classification_dataset dataset = prep_dataset(file,true); // convert data to numeric, normalize and categorize classes
   return 0;
+
+  // training params
+  int n_folds = 5;
+  double learning_rate = 0.1;
+  int n_epochs = 1;
+  int n_hidden = 5;
+
+
 }

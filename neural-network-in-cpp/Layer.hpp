@@ -14,7 +14,7 @@ private:
   int m_nInputs;               // counter of inputs
   int m_nNodes;                // counter of nodes
   vector<Node> m_nodes;        // look into "operator[] overloading for vector"
-  vector<double> m_outputs;    // intermediate container for node outputs
+  vector<double> m_output;     // intermediate container for layer output
 
 public:
   Layer(string layer_name,int n_inputs,int n_nodes); // constructor
@@ -23,7 +23,7 @@ public:
   void evaluate_inputs(const vector<double>& inputs);
 
   // update node deltas
-  void update_output_layer_deltas(const vector<double>& expected_outputs);
+  void update_output_layer_deltas(const vector<double>& expected_output);
   void update_hidden_layer_deltas(Layer& next_layer);
 
   // update node weights
@@ -34,7 +34,7 @@ public:
   int get_nInputs(void) { return m_nInputs; };
   int get_nNodes(void) { return m_nNodes; };
   Node get_node(int node_idx) { return m_nodes[node_idx]; }
-  vector<double> get_outputs(void) { return m_outputs; };
+  vector<double> get_output(void) { return m_output; };
 
   // print
   void print(void);

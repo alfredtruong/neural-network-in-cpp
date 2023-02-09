@@ -18,22 +18,22 @@ Layer::Layer(string layer_name,int n_inputs,int n_nodes) {
 Layer::~Layer() {
 };
 
-// forward propagate inputs
-void Layer::evaluate_inputs(const vector<double>& inputs) {
-  m_outputs.clear();
+// forward propagate input
+void Layer::evaluate_input(const vector<double>& input) {
+  m_output.clear();
   for (size_t i=0;i<m_nNodes;i++) {
     Node& this_node = m_nodes[i];
-    this_node.evaluate_inputs(inputs);
-    m_outputs.push_back(this_node.get_output());
+    this_node.evaluate_input(input);
+    m_output.push_back(this_node.get_output());
   }
 }
 
 // compute delta on output layer
-void Layer::update_output_layer_deltas(const vector<double>& expected_outputs) {
+void Layer::update_output_layer_deltas(const vector<double>& expected_output) {
   for (int i=0;i<m_nNodes;i++) {
     Node& this_node = m_nodes[i];
     // compute error = "output - expected"
-    double tmp = this_node.get_output() - expected_outputs[i];
+    double tmp = this_node.get_output() - expected_output[i];
     // compute delta
     tmp = tmp * this_node.transfer_derivative(this_node.get_output());
     this_node.set_delta(tmp);
@@ -57,7 +57,7 @@ void Layer::update_hidden_layer_deltas(Layer& next_layer) {
 }
 
 // update weights for each node
-void Layer::update_weights(const vector<double>& inputs, double learning_rate) {
+void Layer::update_weights(const vector<double>& input, double learning_rate) {
   for (int i=0;i<m_nNodes;i++) {
     Node& this_node = m_nodes[i];
     double tmp; // working container
@@ -68,7 +68,7 @@ void Layer::update_weights(const vector<double>& inputs, double learning_rate) {
     // node weights
     for (int j=0;j<this_node.get_nWeights();j++) {
       tmp = this_node.get_weight(j);
-      tmp -= learning_rate * this_node.get_delta() * inputs[j];
+      tmp -= learning_rate * this_node.get_delta() * input[j];
       this_node.set_weight(j,tmp); // investigate operator[] overloading
     }
   }
@@ -81,8 +81,8 @@ void Layer::print(void) {
   << ", nInputs = [" << m_nInputs << "]"
   << ", nNodes = [" << m_nNodes << "]" << endl;
 
-  display_vector(m_outputs,"outputs");             // display outputs
-  //display_vector(m_errors,"errors");               // display errors
+  display_vector(m_output,"output");               // display output
+  //display_vector(m_errors,"error");              // display error
   for (int i=0;i<m_nNodes;i++) m_nodes[i].print(); // display nodes
 
   cout << endl;
@@ -106,16 +106,16 @@ void Layer_test_forward_propagation(void) {
   l1.print();
 
   // forward propagation
-  vector<double> inputs = {1,2};
-  l1.evaluate_inputs(inputs);
+  vector<double> input = {1,2};
+  l1.evaluate_input(input);
   l1.print();
 
   // compute deltas
-  vector<double> expected_outputs = {3,4,5};
-  l1.update_output_layer_deltas(expected_outputs);
+  vector<double> expected_output = {3,4,5};
+  l1.update_output_layer_deltas(expected_output);
   l1.print();
 
   // update weights
-  l1.update_weights(inputs,0.5);
+  l1.update_weights(input,0.5);
   l1.print();
 }

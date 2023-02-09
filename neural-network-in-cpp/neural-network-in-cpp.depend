@@ -4,19 +4,19 @@
 	"utils.hpp"
 	<iostream>
 
-1675840028 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.hpp
+1675924301 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.hpp
 	"Node.hpp"
 	"Layer.hpp"
 	<vector>
 
-1675839942 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\main.cpp
+1675924497 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\main.cpp
 	"utils.hpp"
-	"Node.hpp"
-	"Layer.hpp"
+	"ModelFitting.hpp"
 	"NeuralNetwork.hpp"
 	<iostream>
 	<array>
 	<random>
+	<map>
 
 1675840028 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\node.hpp
 	<vector>
@@ -27,11 +27,11 @@
 	<vector>
 	<string>
 
-1675838970 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.hpp
+1675924057 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.hpp
 	<vector>
 	<iostream>
 
-1675843956 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.cpp
+1675924057 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.cpp
 	"utils.hpp"
 	<iostream>
 	<fstream>
@@ -46,4 +46,10 @@
 1675840028 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\layer.cpp
 	"Layer.hpp"
 	"utils.hpp"
+
+1675924653 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\modelfitting.hpp
+	<vector>
+
+1675924674 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\modelfitting.cpp
+	"ModelFitting.hpp"
 
