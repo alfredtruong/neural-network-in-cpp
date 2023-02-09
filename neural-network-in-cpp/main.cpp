@@ -15,18 +15,20 @@ typedef array<double,N_ATTRS> obs_attrs;
 typedef pair<obs_class,obs_attrs> y_X;
 typedef vector<y_X> dataset;
 
+typedef vector<vector<string>> parsed_file;
+
 // parse attributes
-dataset parsed_file_to_dataset(vector<vector<string>> parsed_file) {
+dataset prep_dataset(parsed_file& file) {
   /*
-  0-6 = Xs = float
-  7   = y  = int
+  columns 0-6 = attributes = float
+  columns 7   = classe     = int
   */
   // containers to identify columnwise mins and maxs
   bool initialize_min_max = true; // logic flag re "should initialize min max
   obs_attrs attr_min; //{numeric_limits<double>::max()};
   obs_attrs attr_max; //{numeric_limits<double>::min()};
 
-  // dico to map classes to integers
+  // map classes to integer
   map<string,int> class_mapper;
   int class_counter = 0; // counter for unique classes
 
@@ -34,13 +36,15 @@ dataset parsed_file_to_dataset(vector<vector<string>> parsed_file) {
   dataset ds;
 
   // parse + massage data
-  for (auto it = parsed_file.begin();it!=parsed_file.end();it++) {
-    // convert attributes from strong to doubles
-    obs_attrs attrs;
-    obs_class mapped_class;
+  for (auto it = file.begin();it!=file.end();it++) {
+    vector<string> row = *it;
+    // convert string to useable data
+    obs_attrs attrs;        // convert attributes from string to doubles
+    obs_class mapped_class; // convert class from string to int
+
 
     for (int i=0;i<N_ATTRS;i++)
-      attrs[i] = stod((*it)[i]);
+      attrs[i] = stod(row[i]);
 
     // identify min/max on each column
     if (initialize_min_max) {
@@ -60,7 +64,7 @@ dataset parsed_file_to_dataset(vector<vector<string>> parsed_file) {
     // map classes to 0,...,N
     if (class_mapper.find((*it)[N_ATTRS]) == class_mapper.end()) {
       // class not present
-      class_mapper[(*it)[N_ATTRS]] == class_counter;
+      class_mapper[row[N_ATTRS]] == class_counter;
       class_counter++;
     }
 

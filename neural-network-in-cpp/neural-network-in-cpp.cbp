@@ -32,9 +32,15 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="Layer.cpp" />
+		<Unit filename="Layer.hpp" />
 		<Unit filename="NeuralNetwork.cpp" />
 		<Unit filename="NeuralNetwork.hpp" />
+		<Unit filename="Node.cpp" />
+		<Unit filename="Node.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="utils.cpp" />
+		<Unit filename="utils.hpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
