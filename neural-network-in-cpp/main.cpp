@@ -10,28 +10,17 @@ using namespace std;
 
 const int N_ATTRS = 7;
 
-typedef array<double,N_ATTRS> obs_attrs;
 typedef int obs_class;
-typedef pair<obs_attrs,obs_class> X_y;
-typedef vector<X_y> dataset;
+typedef array<double,N_ATTRS> obs_attrs;
+typedef pair<obs_class,obs_attrs> y_X;
+typedef vector<y_X> dataset;
 
-X_y parsed_line_to_X_y(vector<string>& parsed_line) {
+// parse attributes
+dataset parsed_file_to_dataset(vector<vector<string>> parsed_file) {
   /*
   0-6 = Xs = float
   7   = y  = int
   */
-  // parse attributes
-  obs_attrs row_attrs;
-  for (int i=0;i<N_ATTRS;i++)
-    row_attrs[i] = stod(parsed_line[i]);
-
-  // parse class
-  obs_class row_class = stoi(parsed_line[7]);
-
-  return X_y(row_attrs,row_class);
-}
-
-dataset parsed_file_to_dataset(vector<vector<string>> parsed_file) {
   // containers to identify columnwise mins and maxs
   bool initialize_min_max = true; // logic flag re "should initialize min max
   obs_attrs attr_min; //{numeric_limits<double>::max()};
@@ -76,7 +65,7 @@ dataset parsed_file_to_dataset(vector<vector<string>> parsed_file) {
     }
 
     // save parsed dataset
-    ds.push_back(X_y(attrs,));
+    ds.push_back();
   }
 
   // show min/max on each column
