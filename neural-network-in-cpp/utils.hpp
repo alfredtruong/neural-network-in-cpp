@@ -7,14 +7,30 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////
-// UTILS
+// TEMPLATES
 ////////////////////////////////////////////////////////
+
 template <typename T>
-void display_vector(vector<T>& v,const string name) {
+void display_vector(vector<T>& vec,const string name) {
   // show outputs
-  cout << "\t[" << name << "] n = [" << v.size() << "], data = [ ";
-  for (auto x: v) cout << x << ", ";
+  cout << "\t[" << name << "] n = [" << vec.size() << "], data = [ ";
+  for (auto x: vec) cout << x << ", ";
   cout << "]" << endl;
 }
+
+template <typename T>
+int argmax(vector<T> vec) {
+  return distance(vec.begin(),max_element(vec.begin(),vec.end()));
+}
+
+template <typename T>
+int argmin(vector<T> vec) {
+  return distance(vec.begin(),min_element(vec.begin(),vec.end()));
+}
+
+////////////////////////////////////////////////////////
+// UTILS
+////////////////////////////////////////////////////////
+vector<vector<string>> parse_csv(string filename);
 
 #endif

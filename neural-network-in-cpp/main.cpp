@@ -5,93 +5,103 @@
 #include <iostream>
 #include <array>    // for storing weights
 #include <random>   // for initializing weights
+#include <map>      // for min/max identification
 using namespace std;
 
-void Node_test_instantiation(void) {
-  cout << __func__ << endl << endl;
+const int N_ATTRS = 7;
 
-  // instantiate
-  Node n1 = Node("n1",2);
-  Node n2 = Node("n2",3);
-  n1.print();
-  n2.print();
+typedef array<double,N_ATTRS> obs_attrs;
+typedef int obs_class;
+typedef pair<obs_attrs,obs_class> X_y;
+typedef vector<X_y> dataset;
+
+X_y parsed_line_to_X_y(vector<string>& parsed_line) {
+  /*
+  0-6 = Xs = float
+  7   = y  = int
+  */
+  // parse attributes
+  obs_attrs row_attrs;
+  for (int i=0;i<N_ATTRS;i++)
+    row_attrs[i] = stod(parsed_line[i]);
+
+  // parse class
+  obs_class row_class = stoi(parsed_line[7]);
+
+  return X_y(row_attrs,row_class);
 }
 
-void Node_test_forward_propagation(void) {
-  cout << __func__ << endl << endl;
+dataset parsed_file_to_dataset(vector<vector<string>> parsed_file) {
+  // containers to identify columnwise mins and maxs
+  bool initialize_min_max = true; // logic flag re "should initialize min max
+  obs_attrs attr_min; //{numeric_limits<double>::max()};
+  obs_attrs attr_max; //{numeric_limits<double>::min()};
 
-  // instantiate
-  Node n1 = Node("n1",2);
-  cout << "activation = " << n1.activation_function(0) << endl;
-  cout << "derivative = " << n1.transfer_derivative(0.5) << endl;
+  // dico to map classes to integers
+  map<string,int> class_mapper;
+  int class_counter = 0; // counter for unique classes
 
-  // forward propagation
-  vector<double> input1 = {1,2};
-  n1.evaluate_inputs(input1);
-  n1.print();
-}
+  // container to store massaged data
+  dataset ds;
 
-void Layer_test_instantiation(void) {
-  cout << __func__ << endl << endl;
+  // parse + massage data
+  for (auto it = parsed_file.begin();it!=parsed_file.end();it++) {
+    // convert attributes from strong to doubles
+    obs_attrs attrs;
+    obs_class mapped_class;
 
-  // instantiate
-  Layer l1 = Layer("l1",2,3);
-  Layer l2 = Layer("l2",10,2);
-  l1.print();
-  l2.print();
-}
+    for (int i=0;i<N_ATTRS;i++)
+      attrs[i] = stod((*it)[i]);
 
-void Layer_test_forward_propagation(void) {
-  cout << __func__ << endl << endl;
+    // identify min/max on each column
+    if (initialize_min_max) {
+      // ensure attr_min and attr_max populated sensibly
+      for (int i=0;i<N_ATTRS;i++) {
+        attr_min[i] = attrs[i];
+        attr_max[i] = attrs[i];
+      }
+      initialize_min_max = false;
+    } else {
+      for (int i=0;i<N_ATTRS;i++) {
+        if (attrs[i]<attr_min[i]) attr_min[i] = attrs[i];
+        if (attrs[i]>attr_max[i]) attr_max[i] = attrs[i];
+      }
+    }
 
-  // instantiate
-  Layer l1 = Layer("l1",2,3);
-  l1.print();
+    // map classes to 0,...,N
+    if (class_mapper.find((*it)[N_ATTRS]) == class_mapper.end()) {
+      // class not present
+      class_mapper[(*it)[N_ATTRS]] == class_counter;
+      class_counter++;
+    }
 
-  // forward propagation
-  vector<double> inputs = {1,2};
-  l1.evaluate_inputs(inputs);
-  l1.print();
+    // save parsed dataset
+    ds.push_back(X_y(attrs,));
+  }
 
-  // compute deltas
-  vector<double> expected_outputs = {3,4,5};
-  l1.update_output_layer_deltas(expected_outputs);
-  l1.print();
+  // show min/max on each column
+  for (int i=0;i<N_ATTRS;i++) cout << attr_min[i] << " ";
+  cout << endl;
+  for (int i=0;i<N_ATTRS;i++) cout << attr_max[i] << " ";
+  cout << endl;
 
-  // update weights
-  l1.update_weights(inputs,0.5);
-  l1.print();
-}
+  // show class mappings
+  for (auto it = class_mapper.begin();it!=class_mapper.end();it++)
+    cout << it->first << it->second << endl;
 
-void NeuralNetwork_test_instantiation(void) {
-  cout << __func__ << endl << endl;
+  // normalize attributes and categorize classes
+  for (auto it = ds.begin();it!=ds.end();it++) {
+    // normalized ds
+    for (int i=0;i<N_ATTRS;i++) {
+      attrs[i] = (attrs[i] - attr_min[i]) / (attr_max[i] - attr_min[i]);
+    }
 
-  NeuralNetwork nn1 = NeuralNetwork(3,2,4);
-  NeuralNetwork nn2 = NeuralNetwork(2,2,5);
-  nn1.print();
-  nn2.print();
-}
+    // categorize classes
+    mapped_class = class_mapper[(*it)[N_ATTRS];
+  }
 
-void NeuralNetwork_test_forward_propagation(void) {
-  cout << __func__ << endl << endl;
-
-  // instantiation
-  NeuralNetwork nn1 = NeuralNetwork(3,2,4);
-  nn1.print();
-
-  // forward propagation
-  vector<double> inputs = {1,2,3};
-  nn1.forward_propagate_inputs(inputs);
-  nn1.print();
-
-  // back propagate errors
-  vector<double> expected_outputs = {3,4,5,6};
-  nn1.back_propagate_errors(expected_outputs);
-  nn1.print();
-
-  // update weights
-  nn1.update_weights(inputs,0.5);
-  nn1.print();
+  // return normalized ds
+  return X_y(attrs,mapped_class);
 }
 
 int main() {
@@ -111,5 +121,18 @@ int main() {
 
   // train it
 
+  vector<vector<string>> parsed_file = parse_csv("wheat-seeds.txt");
+  dataset ds = parsed_file_to_dataset(parsed_file);
+  for (auto row:ds) {
+    cout << row.second << " : "
+    << row.first[0] << " "
+    << row.first[1] << " "
+    << row.first[2] << " "
+    << row.first[3] << " "
+    << row.first[4] << " "
+    << row.first[5] << " "
+    << row.first[6] << " "
+    << endl;
+  }
   return 0;
 }

@@ -88,3 +88,34 @@ void Layer::print(void) {
   cout << endl;
 }
 
+void Layer_test_instantiation(void) {
+  cout << __func__ << endl << endl;
+
+  // instantiate
+  Layer l1 = Layer("l1",2,3);
+  Layer l2 = Layer("l2",10,2);
+  l1.print();
+  l2.print();
+}
+
+void Layer_test_forward_propagation(void) {
+  cout << __func__ << endl << endl;
+
+  // instantiate
+  Layer l1 = Layer("l1",2,3);
+  l1.print();
+
+  // forward propagation
+  vector<double> inputs = {1,2};
+  l1.evaluate_inputs(inputs);
+  l1.print();
+
+  // compute deltas
+  vector<double> expected_outputs = {3,4,5};
+  l1.update_output_layer_deltas(expected_outputs);
+  l1.print();
+
+  // update weights
+  l1.update_weights(inputs,0.5);
+  l1.print();
+}

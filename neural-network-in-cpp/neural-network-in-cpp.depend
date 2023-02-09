@@ -1,15 +1,15 @@
 # depslib dependency file v1.0
-1675832343 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.cpp
+1675840026 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.cpp
 	"NeuralNetwork.hpp"
 	"utils.hpp"
 	<iostream>
 
-1675833922 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.hpp
+1675840028 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\neuralnetwork.hpp
 	"Node.hpp"
 	"Layer.hpp"
 	<vector>
 
-1675832863 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\main.cpp
+1675839942 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\main.cpp
 	"utils.hpp"
 	"Node.hpp"
 	"Layer.hpp"
@@ -18,28 +18,32 @@
 	<array>
 	<random>
 
-1675833922 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\node.hpp
+1675840028 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\node.hpp
 	<vector>
 	<string>
 
-1675833922 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\layer.hpp
+1675840028 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\layer.hpp
 	"Node.hpp"
 	<vector>
 	<string>
 
-1675767734 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.hpp
+1675838970 c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.hpp
 	<vector>
 	<iostream>
 
-1675767731 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.cpp
+1675843956 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\utils.cpp
+	"utils.hpp"
+	<iostream>
+	<fstream>
+	<sstream>
 
-1675832307 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\node.cpp
+1675840028 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\node.cpp
 	"Node.hpp"
 	<iostream>
 	<cmath>
 	<random>
 
-1675832308 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\layer.cpp
+1675840028 source:c:\users\ahkar\onedrive\documents\github\neural-network-in-cpp\neural-network-in-cpp\layer.cpp
 	"Layer.hpp"
 	"utils.hpp"
 

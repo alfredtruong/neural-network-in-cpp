@@ -68,5 +68,41 @@ void NeuralNetwork::print(void) {
   cout << endl;
   for (auto layer : m_layers) layer.print();
   cout << endl;
+}
 
+vector<double> NeuralNetwork::predict(const vector<double>& inputs) {
+  forward_propagate_inputs(inputs);
+  Layer& output_layer = m_layers[m_nLayers-1];
+  return output_layer.get_outputs();
+}
+
+void NeuralNetwork_test_instantiation(void) {
+  cout << __func__ << endl << endl;
+
+  NeuralNetwork nn1 = NeuralNetwork(3,2,4);
+  NeuralNetwork nn2 = NeuralNetwork(2,2,5);
+  nn1.print();
+  nn2.print();
+}
+
+void NeuralNetwork_test_forward_propagation(void) {
+  cout << __func__ << endl << endl;
+
+  // instantiation
+  NeuralNetwork nn1 = NeuralNetwork(3,2,4);
+  nn1.print();
+
+  // forward propagation
+  vector<double> inputs = {1,2,3};
+  nn1.forward_propagate_inputs(inputs);
+  nn1.print();
+
+  // back propagate errors
+  vector<double> expected_outputs = {3,4,5,6};
+  nn1.back_propagate_errors(expected_outputs);
+  nn1.print();
+
+  // update weights
+  nn1.update_weights(inputs,0.5);
+  nn1.print();
 }

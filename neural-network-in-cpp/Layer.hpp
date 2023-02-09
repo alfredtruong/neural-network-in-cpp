@@ -40,4 +40,7 @@ public:
   void print(void);
 };
 
+void Layer_test_instantiation(void);
+void Layer_test_forward_propagation(void);
+
 #endif

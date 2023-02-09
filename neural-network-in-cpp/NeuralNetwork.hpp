@@ -27,11 +27,14 @@ public:
   void back_propagate_errors(const vector<double>& expected_outputs);
   void update_weights(const vector<double>& inputs, double learning_rate);
   void train();
-  void predict();
+  vector<double> predict(const vector<double>& inputs);
 
   // print
   void print(void);
 
 };
+
+void NeuralNetwork_test_instantiation(void);
+void NeuralNetwork_test_forward_propagation(void);
 
 #endif

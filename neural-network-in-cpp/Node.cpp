@@ -86,3 +86,27 @@ ostream& operator<< (ostream& os, const Node& node) {
   return os;
 }
 */
+
+void Node_test_instantiation(void) {
+  cout << __func__ << endl << endl;
+
+  // instantiate
+  Node n1 = Node("n1",2);
+  Node n2 = Node("n2",3);
+  n1.print();
+  n2.print();
+}
+
+void Node_test_forward_propagation(void) {
+  cout << __func__ << endl << endl;
+
+  // instantiate
+  Node n1 = Node("n1",2);
+  cout << "activation = " << n1.activation_function(0) << endl;
+  cout << "derivative = " << n1.transfer_derivative(0.5) << endl;
+
+  // forward propagation
+  vector<double> input1 = {1,2};
+  n1.evaluate_inputs(input1);
+  n1.print();
+}

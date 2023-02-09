@@ -44,4 +44,7 @@ public:
   //friend std::ostream& operator<< (std::ostream& out, const Node& node);
 };
 
+void Node_test_instantiation(void);
+void Node_test_forward_propagation(void);
+
 #endif
