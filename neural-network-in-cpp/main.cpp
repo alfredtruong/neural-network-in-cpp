@@ -7,6 +7,7 @@
 using namespace std;
 
 const int N_ATTRS = 7;
+const int N_CLASSES = 3;
 
 // parse attributes
 classification_dataset prep_dataset(parsed_file& file,bool verbose = false) {
@@ -34,19 +35,19 @@ classification_dataset prep_dataset(parsed_file& file,bool verbose = false) {
     observation_class mapped_class;          // convert class from string to int
 
     // convert string attrs to floats
-    for (int i=0;i<attrs.size();i++)
+    for (size_t i=0;i<attrs.size();i++)
       attrs[i] = stod(vw[i]);
 
     // identify mins/maxs for each column
     if (initialize_min_max) {
       // ensure attr_min and attr_max populated sensibly
-      for (int i=0;i<attrs.size();i++) {
+      for (size_t i=0;i<attrs.size();i++) {
         attr_min[i] = attrs[i];
         attr_max[i] = attrs[i];
       }
       initialize_min_max = false;
     } else {
-      for (int i=0;i<attrs.size();i++) {
+      for (size_t i=0;i<attrs.size();i++) {
         if (attrs[i]<attr_min[i]) attr_min[i] = attrs[i];
         if (attrs[i]>attr_max[i]) attr_max[i] = attrs[i];
       }
@@ -79,7 +80,7 @@ classification_dataset prep_dataset(parsed_file& file,bool verbose = false) {
   // normalized attrs to [0-1] with min-max normalizer
   for (auto it = dataset.begin();it!=dataset.end();it++) {
     observation_attributes& attrs = it->second;
-    for (int i=0;i<attrs.size();i++)
+    for (size_t i=0;i<attrs.size();i++)
       attrs[i] = (attrs[i] - attr_min[i]) / (attr_max[i] - attr_min[i]);
   }
 
@@ -88,10 +89,10 @@ classification_dataset prep_dataset(parsed_file& file,bool verbose = false) {
     // show min/max on each column
     cout << "attribute mins / maxs" << endl;
     cout << "\t";
-    for (int i=0;i<N_ATTRS;i++) cout << attr_min[i] << " ";
+    for (size_t i=0;i<attr_min.size();i++) cout << attr_min[i] << " ";
     cout << endl;
     cout << "\t";
-    for (int i=0;i<N_ATTRS;i++) cout << attr_max[i] << " ";
+    for (size_t i=0;i<attr_max.size();i++) cout << attr_max[i] << " ";
     cout << endl;
     cout << endl;
 
@@ -138,13 +139,17 @@ int main() {
   // get data
   parsed_file file = parse_csv("wheat-seeds.txt");          // parse
   classification_dataset dataset = prep_dataset(file,true); // convert data to numeric, normalize and categorize classes
-  return 0;
 
   // training params
   int n_folds = 5;
-  double learning_rate = 0.1;
-  int n_epochs = 1;
-  int n_hidden = 5;
+  double learning_rate = 0.05;
+  int n_epochs = 1000000;
+  int n_hidden = 20;
+  bool verbose = true;
+  int verbose_n_epochs = 100;
 
+  NeuralNetwork nn = NeuralNetwork(N_ATTRS,n_hidden,N_CLASSES);
+  nn.train_n_epochs(dataset,learning_rate,n_epochs,verbose,verbose_n_epochs);
 
+  return 0;
 }

@@ -23,9 +23,9 @@ public:
   double activation_function(double x);   // computes transfer for given activation
   double transfer_derivative(double x);   // gives gradient at m_output
 
-  void compute_activation(const vector<double>& inputs); // compute activation value given inputs
+  void compute_activation(const vector<double>& input); // compute activation value given inputs
   void compute_output(void);                             // activation function applied to activation value
-  void evaluate_inputs(const vector<double>& inputs);
+  void evaluate_input(const vector<double>& input);
 
 
   // getters

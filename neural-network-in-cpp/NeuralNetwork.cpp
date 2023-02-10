@@ -7,14 +7,14 @@
 ////////////////////////////////////////////////////////
 
 // initialize network
-NeuralNetwork::NeuralNetwork(int n_inputs,int n_hiddens,int n_outputs) {
-  m_nInputs = n_inputs;
-  m_nHiddens = n_hiddens;
-  m_nOutputs = n_outputs;
+NeuralNetwork::NeuralNetwork(int network_nInputNodes,int network_nHiddenNodes,int network_nOutputNodes) {
+  m_nInputNodes = network_nInputNodes;
+  m_nHiddenNodes = network_nHiddenNodes;
+  m_nOutputNodes = network_nOutputNodes;
 
   m_nLayers = 0;
-  add_layer("hidden",n_inputs,n_hiddens);
-  add_layer("output",n_hiddens,n_outputs);
+  add_layer("hidden",m_nInputNodes,m_nHiddenNodes);
+  add_layer("output",m_nHiddenNodes,m_nOutputNodes);
 };
 
 // destructor
@@ -35,7 +35,6 @@ void NeuralNetwork::forward_propagate_input(const vector<double>& input) {
     this_layer.evaluate_input(new_input);
     new_input = this_layer.get_output(); // next layer looks at this layers output
   }
-  return new_input;
 }
 
 // reverse iterate over layers
@@ -63,21 +62,21 @@ void NeuralNetwork::update_weights(const vector<double>& input, double learning_
 
 void NeuralNetwork::print(void) {
   cout << "network [" << this << "]";
-  cout << ", nInputs = [" << m_nInputs << "]";
-  cout << ", nHiddens = [" << m_nHiddens << "]";
-  cout << ", nOutputs = [" << m_nOutputs << "]";
+  cout << ", nInputNodes = [" << m_nInputNodes << "]";
+  cout << ", nHiddenNodes = [" << m_nHiddenNodes << "]";
+  cout << ", nOutputNodes = [" << m_nOutputNodes << "]";
   cout << endl;
   for (auto layer : m_layers) layer.print();
   cout << endl;
 }
 
-void NeuralNetwork::train_single_observation(classification_observation& observation, double learning_rate) {
+void NeuralNetwork::train_single_observation(const classification_observation& observation, double learning_rate) {
   // prep input attributes
-  vector<double>& input = observation.second;
+  const vector<double>& input = observation.second;
 
   // prep input class
   observation_class actual_classID = observation.first;
-  vector<double>& expected_output = classID_to_onehot(actual_classID);
+  const vector<double>& expected_output = classID_to_onehot(actual_classID);
 
   // fit for single observation
   forward_propagate_input(input);
@@ -85,50 +84,50 @@ void NeuralNetwork::train_single_observation(classification_observation& observa
   update_weights(input,learning_rate);
 }
 
-void NeuralNetwork::train_entire_dataset(classification_dataset& dataset,double learning_rate) {
+void NeuralNetwork::train_entire_dataset(const classification_dataset& dataset,double learning_rate) {
   // send entire dataset through nnet
   for (auto& observation : dataset)
-    train_single_observation(classification_observation observation,double learning_rate)
+    train_single_observation(observation,learning_rate);
 }
 
-void NeuralNetwork::train_n_epochs(classification_dataset& dataset,double learning_rate, int n_epochs,bool verbose,int verbose_epochs) {
+void NeuralNetwork::train_n_epochs(const classification_dataset& dataset,double learning_rate, int n_epochs,bool verbose,int verbose_epochs) {
   // train entire dataset n_epochs times
   for (int i=0;i<n_epochs;i++) {
     train_entire_dataset(dataset,learning_rate);
 
     // evaluate errors
     if (verbose)
-      if (i%verbose_epochs==0) {
-
-      }
-
+      if (i%verbose_epochs==0)
+        evaluate_network(dataset,i);
   }
 }
 
-void NeuralNetwork::evaluate_network(classification_dataset& dataset) {
-  double sum_squared_errors = 0;
-  double accuracy = 0;
+void NeuralNetwork::evaluate_network(const classification_dataset& dataset,int epoch) {
   int correct_counter = 0;
+  double sum_squared_errors = 0;
   for (auto& observation : dataset) {
-    // get prediction vector
-    vector<double> output = predict(observation.second);
-    // get class prediction
-    observation_class predicted_classID = output_to_classID(output);
+    // do prediction
+    vector<double> output = predict(observation.second);  // prediction vector
+    observation_class predicted_classID = argmax(output); // class prediction
 
     // count correct predictions
-    if (observation.first) == predicted_classID)
+    if (observation.first == predicted_classID)
       correct_counter++;
 
-    vector<double> expected_output = classID_to_onehot(observation.first);
     // compute squared errors
-    sum_squared_errors += output_squared_error(output,)
+    const vector<double>& expected_output = classID_to_onehot(observation.first);
+    sum_squared_errors += output_squared_error(output,expected_output);
   }
-  return static_cast<double>(correct) / predicted.size();
 
+  // save down accuracy
+  double accuracy = static_cast<double>(correct_counter) / static_cast<double>(dataset.size());
 
-
-
-  }
+  // log
+  cout << "epoch [" << epoch << "]";
+  cout << ", accuracy = [" << accuracy << "]";
+  cout << ", sse = [" << sum_squared_errors << "]";
+  cout << endl;
+}
 
 vector<double> NeuralNetwork::predict(const vector<double>& input) {
   forward_propagate_input(input);
@@ -136,22 +135,18 @@ vector<double> NeuralNetwork::predict(const vector<double>& input) {
   return output_layer.get_output();
 }
 
-observation_class NeuralNetwork::output_to_classID(const vector<double>& output);
-  return argmax(output);
-}
-
 // nClasses is N, the count of unique classes in the dataset
 // classID integer in [0,nClasses) denoting which class an observation is from
-vector<double> NeuralNetwork::classID_to_onehot(observation_class classID) {
-  vector<double> onehot(m_nOutputs,0);
+const vector<double> NeuralNetwork::classID_to_onehot(observation_class classID) {
+  vector<double> onehot(m_nOutputNodes,0);
   onehot[classID] = 1.0;
   return onehot;
 }
 
 // distance(single observation class probability prediction,expected_output)
-double NeuralNetwork::output_squared_error(vector<double> output,vector<double> expected_output) {
+double NeuralNetwork::output_squared_error(const vector<double>& output,const vector<double>& expected_output) {
   double squared_error = 0;
-  for (int i=0;i<m_nOutputs;i++) {
+  for (int i=0;i<m_nOutputNodes;i++) {
     double error = (output[i] - expected_output[i]);
     squared_error += error * error;
   }

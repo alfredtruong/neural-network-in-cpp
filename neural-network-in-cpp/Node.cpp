@@ -8,9 +8,9 @@
 ////////////////////////////////////////////////////////
 
 // initialize node
-Node::Node(string node_name,int n_inputs) {
+Node::Node(string node_name,int node_nInputs) {
   m_nodeName = node_name;
-  m_nWeights = n_inputs;
+  m_nWeights = node_nInputs;
 
   // initialize node weights + bias (<=)
   for (int i=0;i<=m_nWeights;i++)
@@ -38,10 +38,10 @@ double Node::transfer_derivative(double x) {
   return x * (1.0 - x);
 };
 
-void Node::compute_activation(const vector<double>& inputs) {
+void Node::compute_activation(const vector<double>& input) {
   m_activation = m_weights[m_nWeights]; // overwriting existing value, start with bias
   for (int i=0;i<m_nWeights;i++)
-    m_activation += m_weights[i] * inputs[i]; // add weight x input
+    m_activation += m_weights[i] * input[i]; // add weight x input
   //cout << "[" << this << "][" << __func__ << "] " << m_activation << endl;
 }
 
@@ -51,8 +51,8 @@ void Node::compute_output(void) {
 }
 
 // forward propagate inputs
-void Node::evaluate_inputs(const vector<double>& inputs) {
-  compute_activation(inputs);
+void Node::evaluate_input(const vector<double>& input) {
+  compute_activation(input);
   compute_output();
   //cout << "[" << this << "][" << __func__ << "] " << endl;
   //this->print();
@@ -107,6 +107,6 @@ void Node_test_forward_propagation(void) {
 
   // forward propagation
   vector<double> input1 = {1,2};
-  n1.evaluate_inputs(input1);
+  n1.evaluate_input(input1);
   n1.print();
 }

@@ -20,14 +20,14 @@ public:
   Layer(string layer_name,int n_inputs,int n_nodes); // constructor
   ~Layer();                                          // destructor
 
-  void evaluate_inputs(const vector<double>& inputs);
+  void evaluate_input(const vector<double>& input);
 
   // update node deltas
   void update_output_layer_deltas(const vector<double>& expected_output);
   void update_hidden_layer_deltas(Layer& next_layer);
 
   // update node weights
-  void update_weights(const vector<double>& inputs,double learning_rate); // update weights of all nodes in layer
+  void update_weights(const vector<double>& input,double learning_rate); // update weights of all nodes in layer
 
   // getters
   string get_layerName(void) { return m_layerName; };

@@ -23,10 +23,10 @@ typedef vector<classification_observation> classification_dataset;              
 class NeuralNetwork
 {
 private:
-  int m_nLayers;           // counter of layers
-  int m_nInputs;           // counter of inputs
-  int m_nHiddens;          // counter of hidden nodes
-  int m_nOutputs;          // counter of outputs
+  int m_nLayers;           // number of layers
+  int m_nInputNodes;       // size of input layer
+  int m_nHiddenNodes;      // size of hidden layer
+  int m_nOutputNodes;      // size of output layer
   vector<Layer> m_layers;
 
 public:
@@ -37,11 +37,16 @@ public:
   // methods
   void add_layer(string name,int n_inputs,int n_nodes);
   void forward_propagate_input(const vector<double>& input);
-  void back_propagate_errors(const vector<double>& expected_outputs);
+  void back_propagate_errors(const vector<double>& expected_output);
   void update_weights(const vector<double>& input, double learning_rate);
+
+  void train_single_observation(const classification_observation& observation, double learning_rate);
+  void train_entire_dataset(const classification_dataset& dataset,double learning_rate);
+  void train_n_epochs(const classification_dataset& dataset,double learning_rate, int n_epochs,bool verbose,int verbose_epochs);
+  void evaluate_network(const classification_dataset& dataset,int epoch);
   vector<double> predict(const vector<double>& input);
-  int outputs_to_classID(const vector<double>& outputs);
-  void train(classification_dataset dataset, int nClasses, double learning_rate, int n_epoch);
+  const vector<double> classID_to_onehot(observation_class classID);
+  double output_squared_error(const vector<double>& output,const vector<double>& expected_output);
 
   // print
   void print(void);

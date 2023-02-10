@@ -6,10 +6,10 @@
 ////////////////////////////////////////////////////////
 
 // initialize layer
-Layer::Layer(string layer_name,int n_inputs,int n_nodes) {
+Layer::Layer(string layer_name,int layer_nInputs,int layer_nNodes) {
   m_layerName = layer_name;
-  m_nInputs = n_inputs;
-  m_nNodes = n_nodes;
+  m_nInputs = layer_nInputs;
+  m_nNodes = layer_nNodes;
   for (int i=0;i<m_nNodes;i++)
     m_nodes.push_back(Node(m_layerName,m_nInputs));
 };
