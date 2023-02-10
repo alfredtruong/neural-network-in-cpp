@@ -34,8 +34,6 @@
 		</Compiler>
 		<Unit filename="Layer.cpp" />
 		<Unit filename="Layer.hpp" />
-		<Unit filename="ModelFitting.cpp" />
-		<Unit filename="ModelFitting.hpp" />
 		<Unit filename="NeuralNetwork.cpp" />
 		<Unit filename="NeuralNetwork.hpp" />
 		<Unit filename="Node.cpp" />
